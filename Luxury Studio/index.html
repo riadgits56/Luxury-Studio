@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>লাক্সারি স্টুডিও (Luxury Studio) — Virtual Dress & Fabric Customizer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-start: #FFF5F7;
+      --bg-end: #FCE4EC;
+      --surface: #FFFFFF;
+      --border: #F8BBD0;
+      --primary: #C2185B;
+      --primary-dark: #AD1457;
+      --gold: #D4AF37;
+      --rose-gold: #E6A87C;
+      --text: #3E1F2B;
+      --text-muted: #7B5263;
+      --shadow: 0 10px 30px rgba(194, 24, 91, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Hind Siliguri', sans-serif;
+      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sticky Luxury Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1.5px solid var(--border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 4px 15px rgba(194, 24, 91, 0.06);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-icon {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--gold));
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 20px;
+      box-shadow: 0 3px 10px rgba(194,24,91,0.25);
+    }
+    .brand-title h1 {
+      font-size: 20px;
+      color: var(--primary-dark);
+      line-height: 1.1;
+    }
+    .brand-title span {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 7px 14px;
+      border-radius: 99px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      background: #FCE4EC;
+      border-color: var(--border);
+      color: var(--primary);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(194,24,91,0.25);
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(194,24,91,0.35);
+    }
+    .btn-outline {
+      background: #fff;
+      color: var(--primary);
+      border: 1.5px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 99px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover {
+      border-color: var(--primary);
+      background: #FFF5F7;
+    }
+
+    /* Dress Silhouette Carousel Bar */
+    .dress-bar {
+      max-width: 1360px;
+      margin: 14px auto 0;
+      padding: 0 16px;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding-bottom: 6px;
+    }
+    .dress-pill {
+      flex: 0 0 auto;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .dress-pill:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    .dress-pill.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border-color: var(--primary-dark);
+      box-shadow: 0 6px 16px rgba(194,24,91,0.28);
+    }
+
+    /* Main Studio Layout */
+    .studio-container {
+      max-width: 1360px;
+      margin: 12px auto 30px;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 290px 1fr 310px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .panel-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 6px;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .opt-btn {
+      background: #FFF9FB;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .opt-btn:hover { border-color: var(--primary); }
+    .opt-btn.active {
+      background: #FCE4EC;
+      border-color: var(--primary);
+      color: var(--primary-dark);
+      box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    /* Center Stage Canvas */
+    .center-stage {
+      position: relative;
+      background: radial-gradient(circle at 50% 35%, #FFFFFF 0%, #FFF0F5 70%, #FCE4EC 100%);
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px;
+      min-height: 760px;
+    }
+
+    .stage-top-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .part-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .part-pill {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 11px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .part-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .hint-banner {
+      font-size: 12.5px;
+      background: rgba(212, 175, 55, 0.14);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      color: #5D3A00;
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-weight: 600;
+    }
+
+    .svg-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #dressCanvas {
+      width: 100%;
+      height: auto;
+      max-height: 670px;
+      user-select: none;
+      filter: drop-shadow(0 12px 24px rgba(62, 31, 43, 0.12));
+    }
+
+    /* Interactive SVG Part Hover & Active Highlight */
+    .clickable-part {
+      cursor: pointer;
+      transition: filter 0.2s, opacity 0.2s;
+    }
+    .clickable-part:hover {
+      filter: brightness(1.05) drop-shadow(0 0 6px rgba(212, 175, 55, 0.6));
+    }
+    .clickable-part.selected-part {
+      filter: drop-shadow(0 0 9px rgba(194, 24, 91, 0.75));
+    }
+
+    /* Floating Contextual Popover Menu (On-Tap UX) */
+    .floating-popover {
+      position: absolute;
+      z-index: 50;
+      width: 280px;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(14px);
+      border: 2px solid var(--gold);
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: 0 14px 34px rgba(62, 31, 43, 0.24);
+      display: none;
+      animation: popIn 0.18s ease-out;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.92) translateY(6px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .popover-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    .popover-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .popover-close {
+      background: #FCE4EC;
+      border: none;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      font-size: 15px;
+      line-height: 1;
+      color: var(--primary);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .quick-cycle-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #D4AF37, #B8860B);
+      color: #fff;
+      border: none;
+      padding: 7px 10px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 3px 10px rgba(212,175,55,0.3);
+    }
+    .quick-cycle-btn:hover { filter: brightness(1.06); }
+
+    .mini-swatch-row {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding: 4px 2px 8px;
+      scrollbar-width: thin;
+    }
+    .mini-swatch {
+      width: 36px; height: 36px;
+      flex: 0 0 36px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.16);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .mini-swatch:hover { transform: scale(1.12); }
+    .mini-swatch.active {
+      border-color: var(--primary);
+      transform: scale(1.12);
+      box-shadow: 0 0 0 2px var(--gold);
+    }
+
+    .slider-group {
+      margin-top: 6px;
+      font-size: 12px;
+    }
+    .slider-group label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+    .slider-group input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Right Sidebar Swatches */
+    .cat-tabs {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .cat-tab {
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #FFF9FB;
+      cursor: pointer;
+    }
+    .cat-tab.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .swatch-card {
+      position: relative;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 5px;
+      background: #fff;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .swatch-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    .swatch-card.active {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(194,24,91,0.25);
+    }
+    .swatch-preview {
+      width: 100%;
+      height: 52px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .swatch-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .del-swatch {
+      position: absolute;
+      top: 2px; right: 2px;
+      background: rgba(194,24,91,0.9);
+      color: #fff;
+      border: none;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .stage-bottom-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Saved Closet Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(62, 31, 43, 0.55);
+      backdrop-filter: blur(5px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-box {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 22px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .saved-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .saved-card {
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: #FFF9FB;
+    }
+
+    @media (max-width: 1040px) {
+      .studio-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP LUXURY NAVBAR -->
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-icon">ল</div>
+      <div class="brand-title">
+        <h1>লাক্সারি স্টুডিও (Luxury Studio)</h1>
+        <span>Virtual Dress & Fabric Customizer</span>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="scrollToStudio()">✨ লাইভ স্টুডিও</button>
+      <button class="nav-btn" onclick="openFacePopoverFromBtn()">👤 মুখ যুক্ত করুন (Head Setup)</button>
+      <button class="nav-btn" onclick="toggleClosetModal(true)">👗 আমার ক্লোজেট (<span id="savedCount">0</span>)</button>
+    </div>
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn-outline" onclick="triggerFabricUpload()">+ নতুন কাপড় অ্যাড করুন</button>
+      <button class="btn-primary" onclick="downloadDesignPNG()">📥 ডিজাইন ডাউনলোড (PNG)</button>
+    </div>
+  </header>
+
+  <!-- 6 SIGNATURE DRESS SILHOUETTE BAR -->
+  <div class="dress-bar" id="dressCategoryBar">
+    <button class="dress-pill active" data-dress="kurti_palazzo" onclick="selectDress('kurti_palazzo')">✨ কুর্তি ও পালাজ্জো (Kurti & Palazzo)</button>
+    <button class="dress-pill" data-dress="three_piece" onclick="selectDress('three_piece')">🌸 থ্রি-পিস (Salwar Kameez)</button>
+    <button class="dress-pill" data-dress="anarkali" onclick="selectDress('anarkali')">👑 আনারকলি গাউন (Anarkali)</button>
+    <button class="dress-pill" data-dress="tiered_frock" onclick="selectDress('tiered_frock')">🎀 মডার্ন টিয়ার্ড ফ্রক (Tiered Frock)</button>
+    <button class="dress-pill" data-dress="peplum_lehenga" onclick="selectDress('peplum_lehenga')">💎 পেপলাম ও লেহেঙ্গা (Peplum Lehenga)</button>
+    <button class="dress-pill" data-dress="kaftan" onclick="selectDress('kaftan')">🦋 মডার্ন কাফতান (Belted Kaftan)</button>
+  </div>
+
+  <!-- MAIN 3-COLUMN WORKSPACE -->
+  <main class="studio-container" id="studioMain">
+
+    <!-- LEFT PANEL: NECKLINES, SLEEVES & HEAD CONTROLS -->
+    <aside class="panel">
+      <div class="panel-title">
+        <span>১. গলার ডিজাইন (6 Necklines)</span>
+      </div>
+      <div class="option-grid" id="necklineGrid"></div>
+
+      <div class="panel-title">
+        <span>২. হাতার ডিজাইন (6 Sleeves)</span>
+      </div>
+      <div class="option-grid" id="sleeveGrid"></div>
+
+      <div class="panel-title">
+        <span>৩. গলার উপরে মুখ (Neck-Up Face)</span>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">
+        ডিফল্টভাবে কোনো মাথা নেই। চাইলে গলার উপরের অংশে নিজের বা মডেলের মুখের ছবি বসাতে পারেন:
+      </p>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+        <button class="btn-primary" style="width:100%; justify-content:center;" onclick="triggerFaceUpload()">📸 মুখের ছবি আপলোড করুন</button>
+        <button class="btn-outline" id="hideFaceBtn" style="width:100%; display:none;" onclick="removeFacePhoto()">🚫 মুখ লুকান (Headless Mode)</button>
+      </div>
+
+      <div id="sidebarFaceSliders" style="display:none; background:#FFF5F7; padding:10px; border-radius:12px; border:1px solid var(--border);">
+        <div class="slider-group">
+          <label><span>মুখের জুম (Zoom)</span><span id="lblFaceZoom">1.0x</span></label>
+          <input type="range" min="0.5" max="2.8" step="0.05" value="1" oninput="updateFaceTransform('scale', this.value)">
+        </div>
+        <div class="slider-group">
+          <label><span>ডানে / বামে (Pan X)</span><span id="lblFaceX">0px</span></label>
+          <input type="range" min="-80" max="80" step="1" value="0" oninput="updateFaceTransform('x', this.value)">
+        </div>
+        <div class="slider-group">
+          <label><span>উপরে / নিচে (Pan Y)</span><span id="lblFaceY">0px</span></label>
+          <input type="range" min="-80" max="80" step="1" value="0" oninput="updateFaceTransform('y', this.value)">
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER STAGE: HEADLESS MANNEQUIN + TAP-AND-CHANGE CANVAS -->
+    <section class="center-stage" id="centerStage">
+      <div class="stage-top-bar">
+        <div class="part-pills" id="partPillsBar">
+          <button class="part-pill active" data-part="top" onclick="selectPart('top', event)">কামিজ / কুর্তি</button>
+          <button class="part-pill" data-part="bottom" onclick="selectPart('bottom', event)">পালাজ্জো / সালোয়ার</button>
+          <button class="part-pill" data-part="sleeves" onclick="selectPart('sleeves', event)">হাতা (Sleeves)</button>
+          <button class="part-pill" data-part="dupatta" onclick="selectPart('dupatta', event)">ওড়না (Dupatta)</button>
+          <button class="part-pill" data-part="border" onclick="selectPart('border', event)">গলা ও বর্ডার</button>
+        </div>
+        <div class="hint-banner">👆 ড্রেসের যেকোনো অংশে ট্যাপ করে সাথে সাথে ডিজাইন বদলান!</div>
+      </div>
+
+      <div class="svg-wrapper" id="svgWrapper">
+        <!-- FLOATING ON-TAP POPOVER -->
+        <div class="floating-popover" id="floatingPopover">
+          <div class="popover-header">
+            <span class="popover-title" id="popoverTitle">কুর্তি / টপ পরিবর্তন</span>
+            <button class="popover-close" onclick="closePopover()">×</button>
+          </div>
+          <div id="popoverDynamicContent"></div>
+        </div>
+
+        <!-- INTERACTIVE SVG MANNEQUIN & DRESS CANVAS -->
+        <svg id="dressCanvas" viewBox="0 0 500 740" xmlns="http://www.w3.org/2000/svg">
+          <defs id="svgDefs">
+            <!-- Skin & 3D Lighting Gradients -->
+            <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#DDA384"/>
+              <stop offset="30%" stop-color="#F1C2A6"/>
+              <stop offset="50%" stop-color="#F7D1BA"/>
+              <stop offset="70%" stop-color="#F1C2A6"/>
+              <stop offset="100%" stop-color="#D49574"/>
+            </linearGradient>
+
+            <linearGradient id="body3DShade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#000000" stop-opacity="0.24"/>
+              <stop offset="22%" stop-color="#000000" stop-opacity="0.03"/>
+              <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.16"/>
+              <stop offset="78%" stop-color="#000000" stop-opacity="0.04"/>
+              <stop offset="100%" stop-color="#000000" stop-opacity="0.26"/>
+            </linearGradient>
+
+            <linearGradient id="underHemShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#1A0910" stop-opacity="0.38"/>
+              <stop offset="100%" stop-color="#1A0910" stop-opacity="0.0"/>
+            </linearGradient>
+
+            <!-- STRICT NECK-UP HEAD CLIP PATH (ONLY ABOVE NECK y < 116) -->
+            <clipPath id="headClipOval">
+              <ellipse cx="250" cy="64" rx="44" ry="52" />
+            </clipPath>
+          </defs>
+
+          <!-- STUDIO FLOOR SHADOW -->
+          <ellipse cx="250" cy="712" rx="115" ry="16" fill="rgba(62,31,43,0.12)" />
+
+          <!-- ================= 1. HEADLESS NECK-UP ZONE (ONLY ABOVE NECK) ================= -->
+          <g id="headZoneGroup">
+            <!-- Uploaded Face Photo Rendered Strictly Inside Neck-Up ClipPath -->
+            <g id="uploadedFaceContainer" clip-path="url(#headClipOval)" style="display:none; cursor:pointer;" onclick="openFacePopover(event)">
+              <rect x="190" y="5" width="120" height="120" fill="#F5E1DA"/>
+              <image id="userFaceImage" href="" x="195" y="10" width="110" height="110" preserveAspectRatio="xMidYMid slice" />
+              <ellipse cx="250" cy="64" rx="43" ry="51" fill="none" stroke="#D4AF37" stroke-width="2"/>
+            </g>
+
+            <!-- Non-Exportable UI Prompt when No Face is Added -->
+            <g id="addFacePromptUI" style="cursor:pointer;" onclick="openFacePopover(event)">
+              <ellipse cx="250" cy="66" rx="36" ry="42" fill="rgba(255,245,247,0.75)" stroke="#D4AF37" stroke-width="1.5" stroke-dasharray="5,4"/>
+              <text x="250" y="63" text-anchor="middle" fill="#C2185B" font-size="11" font-weight="700">+ মুখ যুক্ত করুন</text>
+              <text x="250" y="77" text-anchor="middle" fill="#7B5263" font-size="9">(ঐচ্ছিক)</text>
+            </g>
+          </g>
+
+          <!-- ================= 2. HEADLESS MANNEQUIN BODY (NECK DOWN ONLY) ================= -->
+          <g id="mannequinBodyGroup">
+            <!-- Clean Tailored Neck Cutoff & Collarbone (Starts at y=110) -->
+            <path d="M 232 110 Q 250 116 268 110 L 274 132 L 325 144 L 175 144 L 226 132 Z" fill="url(#skinGrad)" />
+            <!-- Neck Top Bevel (Tailor Dummy Style when headless) -->
+            <ellipse id="neckCutoffCap" cx="250" cy="110" rx="18" ry="5" fill="#C98A6B" stroke="#B57657" stroke-width="1"/>
+            <!-- Subtle Collarbone Highlight -->
+            <path d="M 222 136 Q 250 145 278 136" fill="none" stroke="rgba(160,90,60,0.35)" stroke-width="1.5" stroke-linecap="round"/>
+
+            <!-- Left & Right Arms (Full Skin Base underneath sleeves) -->
+            <path id="leftArmSkin" d="M 182 142 C 158 185, 142 250, 132 325 C 128 338, 122 355, 128 364 C 134 368, 142 356, 146 340 C 158 275, 174 215, 192 168 Z" fill="url(#skinGrad)"/>
+            <path id="rightArmSkin" d="M 318 142 C 342 185, 358 250, 368 325 C 372 338, 378 355, 372 364 C 366 368, 358 356, 354 340 C 342 275, 326 215, 308 168 Z" fill="url(#skinGrad)"/>
+
+            <!-- Lower Legs, Ankles & Designer Heels -->
+            <path d="M 208 580 L 214 685 L 204 705 L 228 705 L 228 580 Z" fill="url(#skinGrad)"/>
+            <path d="M 292 580 L 286 685 L 296 705 L 272 705 L 272 580 Z" fill="url(#skinGrad)"/>
+            <!-- Rose-Gold Strappy Sandals -->
+            <path d="M 202 702 Q 216 710 230 702 L 228 710 Q 215 716 202 710 Z" fill="#C2185B"/>
+            <path d="M 210 686 Q 219 690 228 686" fill="none" stroke="#D4AF37" stroke-width="2.5"/>
+            <path d="M 270 702 Q 284 710 298 702 L 298 710 Q 285 716 272 710 Z" fill="#C2185B"/>
+            <path d="M 272 686 Q 281 690 290 686" fill="none" stroke="#D4AF37" stroke-width="2.5"/>
+          </g>
+
+          <!-- ================= 3. DYNAMIC DRESS LAYERS ================= -->
+          <!-- Layer A: Bottom (Palazzo / Salwar / Lehenga) -->
+          <g id="layerBottom" class="clickable-part" onclick="onCanvasPartTap('bottom', event)"></g>
+
+          <!-- Layer B: Sleeves -->
+          <g id="layerSleeves" class="clickable-part" onclick="onCanvasPartTap('sleeves', event)"></g>
+
+          <!-- Layer C: Main Top / Kameez / Kurti / Gown Bodice -->
+          <g id="layerTop" class="clickable-part" onclick="onCanvasPartTap('top', event)"></g>
+
+          <!-- Layer D: Neckline Cutout & Embroidery Border -->
+          <g id="layerBorder" class="clickable-part" onclick="onCanvasPartTap('border', event)"></g>
+
+          <!-- Layer E: Draped Dupatta (ওড়না) -->
+          <g id="layerDupatta" class="clickable-part" onclick="onCanvasPartTap('dupatta', event)"></g>
+        </svg>
+      </div>
+
+      <!-- BOTTOM CONTROLS: SAVE TO CLOSET & RESET -->
+      <div class="stage-bottom-bar">
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <button class="btn-primary" onclick="saveCurrentDesignToCloset()">💖 আমার ক্লোজেটে সেভ করুন</button>
+          <button class="btn-outline" onclick="randomizeOutfit()">🎲 র‍্যান্ডম মিক্স অ্যান্ড ম্যাচ</button>
+        </div>
+        <div style="font-size:12.5px; color:var(--text-muted); font-weight:600;">
+          সক্রিয় পার্ট: <strong id="lblActivePart" style="color:var(--primary);">কামিজ / কুর্তি</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: FABRIC LIBRARY & SCALE/ROTATION -->
+    <aside class="panel">
+      <div class="panel-title">
+        <span>৪. ফেব্রিক ও প্রিন্ট লাইব্রেরি</span>
+        <button class="btn-outline" style="padding:3px 9px; font-size:11.5px;" onclick="triggerFabricUpload()">+ আপলোড</button>
+      </div>
+
+      <div class="cat-tabs" id="fabricCatTabs">
+        <button class="cat-tab active" onclick="filterFabrics('all', this)">সব (All)</button>
+        <button class="cat-tab" onclick="filterFabrics('printed', this)">প্রিন্টেড</button>
+        <button class="cat-tab" onclick="filterFabrics('jamdani', this)">জামদানি ও কাতান</button>
+        <button class="cat-tab" onclick="filterFabrics('solid', this)">সলিড সিল্ক/সুতি</button>
+        <button class="cat-tab" onclick="filterFabrics('custom', this)">আমার কাপড়</button>
+      </div>
+
+      <div class="swatch-grid" id="fabricSwatchGrid"></div>
+
+      <div class="panel-title" style="margin-top:16px;">
+        <span>৫. প্রিন্টের সাইজ ও অ্যাঙ্গেল</span>
+      </div>
+      <div class="slider-group">
+        <label><span>প্রিন্টের সাইজ (Scale)</span><span id="lblSideScale">1.0x</span></label>
+        <input type="range" id="sideScaleSlider" min="0.4" max="2.5" step="0.1" value="1.0" oninput="updateActivePartTransform('scale', this.value)">
+      </div>
+      <div class="slider-group" style="margin-top:8px;">
+        <label><span>কাপড়ের অ্যাঙ্গেল (Rotation)</span><span id="lblSideRotate">0°</span></label>
+        <input type="range" id="sideRotateSlider" min="0" max="360" step="5" value="0" oninput="updateActivePartTransform('rotate', this.value)">
+      </div>
+    </aside>
+  </main>
+
+  <!-- HIDDEN FILE INPUTS -->
+  <input type="file" id="fabricFileInput" accept="image/*" style="display:none;" onchange="handleFabricFileUpload(event)" />
+  <input type="file" id="faceFileInput" accept="image/*" style="display:none;" onchange="handleFaceFileUpload(event)" />
+
+  <!-- SAVED CLOSET MODAL -->
+  <div class="modal-backdrop" id="closetModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid var(--border); padding-bottom:10px;">
+        <h2 style="font-size:18px; color:var(--primary-dark);">👗 আমার সেভড ডিজাইন (My Closet)</h2>
+        <button class="btn-outline" onclick="toggleClosetModal(false)">বন্ধ করুন ×</button>
+      </div>
+      <div class="saved-grid" id="savedDesignsGrid"></div>
+    </div>
+  </div>
+
+  <script>
+    /**************************************************************
+     * 1. BUILT-IN 14 PROCEDURAL SVG FABRICS + LOCALSTORAGE CUSTOM
+     **************************************************************/
+    const BUILTIN_FABRICS = [
+      { id: 'rose_floral', name: 'রোজ ফ্লোরাল প্রিন্ট', cat: 'printed', bg: '#FFEBF0', render: () => `
+        <rect width="60" height="60" fill="#FFEBF0"/>
+        <circle cx="18" cy="18" r="8" fill="#E91E63" opacity="0.8"/>
+        <circle cx="18" cy="18" r="4" fill="#FF80AB"/>
+        <path d="M 10 26 Q 6 32 14 30" stroke="#2E7D32" stroke-width="2" fill="none"/>
+        <circle cx="45" cy="42" r="9" fill="#C2185B" opacity="0.85"/>
+        <circle cx="45" cy="42" r="4" fill="#F8BBD0"/>
+        <circle cx="44" cy="14" r="3" fill="#D4AF37"/>
+        <circle cx="14" cy="48" r="3.5" fill="#F06292"/>`
+      },
+      { id: 'royal_jamdani', name: 'রয়্যাল ব্লু জামদানি', cat: 'jamdani', bg: '#1A237E', render: () => `
+        <rect width="60" height="60" fill="#1A237E"/>
+        <g stroke="#D4AF37" stroke-width="1.3" fill="none">
+          <polygon points="30,6 44,20 30,34 16,20"/>
+          <polygon points="30,12 38,20 30,28 22,20" fill="#D4AF37" fill-opacity="0.3"/>
+          <circle cx="8" cy="48" r="5"/>
+          <circle cx="52" cy="48" r="5"/>
+          <path d="M 0 48 L 60 48" stroke-dasharray="3,3"/>
+        </g>`
+      },
+      { id: 'golden_katan', name: 'গোল্ডেন কাতান ব্রোকেড', cat: 'jamdani', bg: '#880E4F', render: () => `
+        <rect width="60" height="60" fill="#880E4F"/>
+        <path d="M 0 30 Q 15 10 30 30 T 60 30" stroke="#FFD54F" stroke-width="2" fill="none"/>
+        <circle cx="15" cy="22" r="4" fill="#FFD54F"/>
+        <circle cx="45" cy="38" r="4" fill="#FFD54F"/>
+        <polygon points="30,44 36,52 30,58 24,52" fill="#FFCA28"/>`
+      },
+      { id: 'emerald_zari', name: 'এমেরাল্ড জরি চেক', cat: 'jamdani', bg: '#004D40', render: () => `
+        <rect width="60" height="60" fill="#004D40"/>
+        <path d="M 0 20 L 60 20 M 0 40 L 60 40 M 20 0 L 20 60 M 40 0 L 40 60" stroke="#D4AF37" stroke-width="1.4" opacity="0.8"/>
+        <circle cx="20" cy="20" r="2.5" fill="#FFD54F"/>
+        <circle cx="40" cy="40" r="2.5" fill="#FFD54F"/>`
+      },
+      { id: 'pastel_shibori', name: 'প্যাস্টেল শিবোরি টাই-ডাই', cat: 'printed', bg: '#E1F5FE', render: () => `
+        <rect width="60" height="60" fill="#E1F5FE"/>
+        <circle cx="30" cy="30" r="22" stroke="#0288D1" stroke-width="4" stroke-dasharray="6,3" fill="none" opacity="0.6"/>
+        <circle cx="30" cy="30" r="12" stroke="#7B1FA2" stroke-width="3" fill="none" opacity="0.5"/>
+        <circle cx="30" cy="30" r="4" fill="#0277BD"/>`
+      },
+      { id: 'polka_blush', name: 'ব্লাশ পোলকা ডট', cat: 'printed', bg: '#AD1457', render: () => `
+        <rect width="50" height="50" fill="#AD1457"/>
+        <circle cx="12" cy="12" r="4.5" fill="#FFF5F7"/>
+        <circle cx="37" cy="12" r="2.5" fill="#F8BBD0"/>
+        <circle cx="25" cy="26" r="4.5" fill="#FFF5F7"/>
+        <circle cx="12" cy="40" r="2.5" fill="#F8BBD0"/>
+        <circle cx="38" cy="39" r="4.5" fill="#FFF5F7"/>`
+      },
+      { id: 'block_print', name: 'ঐতিহ্যবাহী ব্লক প্রিন্ট', cat: 'printed', bg: '#FFF3E0', render: () => `
+        <rect width="60" height="60" fill="#FFF3E0"/>
+        <path d="M 30 8 L 46 30 L 30 52 L 14 30 Z" stroke="#BF360C" stroke-width="2" fill="#FFCCBC"/>
+        <circle cx="30" cy="30" r="6" fill="#D84315"/>
+        <circle cx="8" cy="8" r="3" fill="#BF360C"/>
+        <circle cx="52" cy="52" r="3" fill="#BF360C"/>`
+      },
+      { id: 'maroon_banarasi', name: 'মেরুন বেনারসি জরদৌসি', cat: 'jamdani', bg: '#5D001E', render: () => `
+        <rect width="60" height="60" fill="#5D001E"/>
+        <g fill="#FFD700" opacity="0.88">
+          <polygon points="15,8 22,16 15,24 8,16"/>
+          <polygon points="45,34 52,42 45,50 38,42"/>
+          <circle cx="45" cy="16" r="3"/>
+          <circle cx="15" cy="42" r="3"/>
+        </g>`
+      },
+      { id: 'crimson_silk', name: 'ক্রিমসন সিল্ক', cat: 'solid', bg: '#B71C1C', render: () => `<rect width="40" height="40" fill="#B71C1C"/>` },
+      { id: 'soft_peach', name: 'সফট পিচ সুতি', cat: 'solid', bg: '#FFCCBC', render: () => `<rect width="40" height="40" fill="#FFCCBC"/>` },
+      { id: 'lavender_georgette', name: 'ল্যাভেন্ডার জর্জেট', cat: 'solid', bg: '#CE93D8', render: () => `<rect width="40" height="40" fill="#CE93D8"/>` },
+      { id: 'mint_linen', name: 'মিন্ট লিনেন', cat: 'solid', bg: '#B2DFDB', render: () => `<rect width="40" height="40" fill="#B2DFDB"/>` },
+      { id: 'black_velvet', name: 'রয়্যাল ব্ল্যাক ভেলভেট', cat: 'solid', bg: '#1C1B22', render: () => `<rect width="40" height="40" fill="#1C1B22"/>` },
+      { id: 'mustard_muslin', name: 'বাসন্তী মসলিন', cat: 'solid', bg: '#FBC02D', render: () => `<rect width="40" height="40" fill="#FBC02D"/>` }
+    ];
+
+    const NECKLINES = [
+      { id: 'round', name: 'গোল গলা (Round)' },
+      { id: 'vneck', name: 'ভি-নেক (V-Neck)' },
+      { id: 'boat', name: 'বোট গলা (Boat)' },
+      { id: 'sweetheart', name: 'পান পাতা গলা' },
+      { id: 'collar', name: 'শেরওয়ানি কলার' },
+      { id: 'square', name: 'স্কয়ার গলা' }
+    ];
+
+    const SLEEVES = [
+      { id: 'three_quarter', name: 'থ্রি-কোয়ার্টার (3/4)' },
+      { id: 'full', name: 'ফুল হাতা (Full)' },
+      { id: 'half', name: 'হাফ হাতা (Short)' },
+      { id: 'bell', name: 'বেল / মাইক হাতা' },
+      { id: 'puff', name: 'পাফ হাতা (Puff)' },
+      { id: 'sleeveless', name: 'স্লিভলেস' }
+    ];
+
+    const PART_LABELS = {
+      top: 'কামিজ / কুর্তি (Top)',
+      bottom: 'পালাজ্জো / সালোয়ার / লেহেঙ্গা',
+      sleeves: 'হাতা (Sleeves)',
+      dupatta: 'ওড়না (Dupatta)',
+      border: 'গলা ও দামান বর্ডার'
+    };
+
+    // Application State
+    let state = {
+      dress: 'kurti_palazzo', // Default showcase dress
+      neckline: 'sweetheart',
+      sleeve: 'three_quarter',
+      activePart: 'top',
+      activeCat: 'all',
+      parts: {
+        top:     { fabric: 'rose_floral', scale: 1.0, rotate: 0 },
+        bottom:  { fabric: 'soft_peach', scale: 1.0, rotate: 0 },
+        sleeves: { fabric: 'rose_floral', scale: 1.0, rotate: 0 },
+        dupatta: { fabric: 'golden_katan', scale: 1.0, rotate: 0 },
+        border:  { fabric: 'maroon_banarasi', scale: 0.8, rotate: 0 }
+      },
+      face: {
+        enabled: false,
+        dataUrl: '',
+        scale: 1.0,
+        x: 0,
+        y: 0
+      }
+    };
+
+    let customFabrics = [];
+    let savedCloset = [];
+
+    /**************************************************************
+     * 2. INITIALIZATION & LOCALSTORAGE LOAD
+     **************************************************************/
+    window.addEventListener('DOMContentLoaded', () => {
+      loadFromStorage();
+      renderOptionButtons();
+      rebuildSVGPatterns();
+      renderSwatches();
+      renderDressOnCanvas();
+      applyFaceState();
+    });
+
+    function loadFromStorage() {
+      try {
+        const cf = localStorage.getItem('LS_CUSTOM_FABRICS_V2');
+        if (cf) customFabrics = JSON.parse(cf);
+
+        const sc = localStorage.getItem('LS_SAVED_CLOSET_V2');
+        if (sc) savedCloset = JSON.parse(sc);
+        document.getElementById('savedCount').textContent = savedCloset.length;
+
+        const savedFace = localStorage.getItem('LS_SAVED_FACE_V2');
+        if (savedFace) {
+          state.face = JSON.parse(savedFace);
+        }
+      } catch (e) { console.warn(e); }
+    }
+
+    function getAllFabrics() {
+      return [...BUILTIN_FABRICS, ...customFabrics];
+    }
+
+    /**************************************************************
+     * 3. SVG PATTERN GENERATOR ENGINE
+     **************************************************************/
+    function rebuildSVGPatterns() {
+      const defs = document.getElementById('svgDefs');
+      // Remove old dynamic patterns
+      defs.querySelectorAll('.dyn-pattern').forEach(el => el.remove());
+
+      const allFabrics = getAllFabrics();
+      Object.keys(state.parts).forEach(partKey => {
+        const cfg = state.parts[partKey];
+        const fab = allFabrics.find(f => f.id === cfg.fabric) || BUILTIN_FABRICS[0];
+        const pat = document.createElementNS('http://www.w3.org/2000/svg', 'pattern');
+        pat.setAttribute('id', `pat_${partKey}`);
+        pat.setAttribute('class', 'dyn-pattern');
+        pat.setAttribute('patternUnits', 'userSpaceOnUse');
+        pat.setAttribute('width', '60');
+        pat.setAttribute('height', '60');
+        pat.setAttribute('patternTransform', `scale(${cfg.scale}) rotate(${cfg.rotate})`);
+
+        if (fab.isCustom) {
+          pat.innerHTML = `<image href="${fab.dataUrl}" x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid slice"/>`;
+        } else {
+          pat.innerHTML = fab.render();
+        }
+        defs.appendChild(pat);
+      });
+    }
+
+    /**************************************************************
+     * 4. TAILORED DRESS SILHOUETTES (EXACT PROPORTIONS)
+     **************************************************************/
+    function renderDressOnCanvas() {
+      rebuildSVGPatterns();
+
+      const gBottom  = document.getElementById('layerBottom');
+      const gSleeves = document.getElementById('layerSleeves');
+      const gTop     = document.getElementById('layerTop');
+      const gBorder  = document.getElementById('layerBorder');
+      const gDupatta = document.getElementById('layerDupatta');
+
+      gBottom.innerHTML = '';
+      gSleeves.innerHTML = '';
+      gTop.innerHTML = '';
+      gBorder.innerHTML = '';
+      gDupatta.innerHTML = '';
+
+      // 1. Render Selected Sleeves
+      gSleeves.innerHTML = getSleevesSVG(state.sleeve);
+
+      // 2. Render Selected Dress Silhouette
+      if (state.dress === 'kurti_palazzo') {
+        // CRITICAL RULE: Short Kurti ending strictly above the knee (y ≈ 380)
+        // Wide-Leg Palazzo starting smoothly from inside hip width (x: 178..322) down to wide ankle hem (x: 130..370)
+        gBottom.innerHTML = `
+          <!-- Wide-Leg Palazzo starting naturally inside hip line -->
+          <path d="M 178 320
+                   C 166 410, 148 530, 130 668
+                   Q 185 678, 244 666
+                   L 250 435
+                   L 256 666
+                   Q 315 678, 370 668
+                   C 352 530, 334 410, 322 320 Z"
+                fill="url(#pat_bottom)" stroke="#3E1F2B" stroke-width="0.9"/>
+          <!-- 3D Cylindrical Shading & Vertical Palazzo Drape Folds -->
+          <path d="M 178 320 C 166 410, 148 530, 130 668 Q 185 678, 244 666 L 250 435 L 256 666 Q 315 678, 370 668 C 352 530, 334 410, 322 320 Z"
+                fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+          <g stroke="rgba(30,10,20,0.22)" stroke-width="1.2" fill="none">
+            <path d="M 195 370 C 185 480, 170 575, 158 668"/>
+            <path d="M 222 385 C 218 490, 210 580, 205 668"/>
+            <path d="M 305 370 C 315 480, 330 575, 342 668"/>
+            <path d="M 278 385 C 282 490, 290 580, 295 668"/>
+          </g>
+          <!-- Cast Shadow directly underneath the Short Kurti Hem -->
+          <path d="M 170 374 Q 250 392 330 374 L 333 398 Q 250 414 167 398 Z" fill="url(#underHemShadow)"/>
+        `;
+
+        const topPath = `
+          M 182 140
+          L 318 140
+          C 322 182, 314 220, 302 252
+          C 314 292, 326 335, 332 378
+          Q 250 392, 168 378
+          C 174 335, 186 292, 198 252
+          C 186 220, 178 182, 182 140 Z
+        `;
+        gTop.innerHTML = `
+          <path d="${topPath}" fill="url(#pat_top)" stroke="#3E1F2B" stroke-width="1"/>
+          <path d="${topPath}" fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+          <!-- Side Slit Highlights & Waist Drape -->
+          <path d="M 198 252 Q 215 265 212 300 M 302 252 Q 285 265 288 300" stroke="rgba(0,0,0,0.15)" stroke-width="1.2" fill="none"/>
+        `;
+
+        gBorder.innerHTML = getNecklineAndBorderSVG(state.neckline, 378, 168, 332);
+
+      } else if (state.dress === 'three_piece') {
+        // Salwar with ankle pleats + Knee-length Kameez (y ≈ 515) + Draped Dupatta
+        gBottom.innerHTML = `
+          <path d="M 178 460 C 172 545, 188 625, 202 680 L 234 680 L 250 535 L 266 680 L 298 680 C 312 625, 328 545, 322 460 Z"
+                fill="url(#pat_bottom)" stroke="#3E1F2B" stroke-width="0.9"/>
+          <path d="M 178 460 C 172 545, 188 625, 202 680 L 234 680 L 250 535 L 266 680 L 298 680 C 312 625, 328 545, 322 460 Z"
+                fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+        `;
+        const kameezPath = `
+          M 182 140 L 318 140
+          C 322 182, 314 220, 302 255
+          C 318 335, 332 425, 338 518
+          L 162 518
+          C 168 425, 182 335, 198 255
+          C 186 220, 178 182, 182 140 Z
+        `;
+        gTop.innerHTML = `
+          <path d="${kameezPath}" fill="url(#pat_top)" stroke="#3E1F2B" stroke-width="1"/>
+          <path d="${kameezPath}" fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+        `;
+        gBorder.innerHTML = getNecklineAndBorderSVG(state.neckline, 518, 162, 338);
+        gDupatta.innerHTML = getDupattaSVG('classic');
+
+      } else if (state.dress === 'anarkali') {
+        const gownPath = `
+          M 182 140 L 318 140
+          C 322 182, 312 220, 298 252
+          C 345 375, 385 525, 412 678
+          Q 250 702, 88 678
+          C 115 525, 155 375, 202 252
+          C 188 220, 178 182, 182 140 Z
+        `;
+        gTop.innerHTML = `
+          <path d="${gownPath}" fill="url(#pat_top)" stroke="#3E1F2B" stroke-width="1"/>
+          <path d="${gownPath}" fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+          <!-- Anarkali Kali Pleat Lines -->
+          <g stroke="rgba(0,0,0,0.2)" stroke-width="1.1" fill="none">
+            <path d="M 215 252 L 135 682"/>
+            <path d="M 235 252 L 190 688"/>
+            <path d="M 250 252 L 250 690"/>
+            <path d="M 265 252 L 310 688"/>
+            <path d="M 285 252 L 365 682"/>
+          </g>
+        `;
+        gBorder.innerHTML = getNecklineAndBorderSVG(state.neckline, 678, 88, 412, true);
+        gDupatta.innerHTML = getDupattaSVG('side');
+
+      } else if (state.dress === 'tiered_frock') {
+        gTop.innerHTML = `
+          <!-- Bodice -->
+          <path d="M 182 140 L 318 140 C 322 182, 312 220, 298 252 L 202 252 C 188 220, 178 182, 182 140 Z" fill="url(#pat_top)" stroke="#3E1F2B"/>
+          <!-- Tier 1 -->
+          <path d="M 200 252 L 300 252 L 336 382 Q 250 394 164 382 Z" fill="url(#pat_top)" stroke="#3E1F2B"/>
+          <!-- Tier 2 -->
+          <path d="M 160 380 L 340 380 L 372 522 Q 250 536 128 522 Z" fill="url(#pat_top)" stroke="#3E1F2B"/>
+          <!-- Tier 3 -->
+          <path d="M 124 520 L 376 520 L 404 665 Q 250 682 96 665 Z" fill="url(#pat_top)" stroke="#3E1F2B"/>
+          <path d="M 182 140 L 318 140 L 404 665 Q 250 682 96 665 Z" fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+        `;
+        gBorder.innerHTML = getNecklineAndBorderSVG(state.neckline, 665, 96, 404, true);
+
+      } else if (state.dress === 'peplum_lehenga') {
+        // Heavy Flared Lehenga Skirt in Bottom Layer
+        gBottom.innerHTML = `
+          <path d="M 192 330 L 308 330 C 350 450, 385 565, 408 680 Q 250 700 92 680 C 115 565, 150 450, 192 330 Z"
+                fill="url(#pat_bottom)" stroke="#3E1F2B" stroke-width="1"/>
+          <path d="M 192 330 L 308 330 C 350 450, 385 565, 408 680 Q 250 700 92 680 C 115 565, 150 450, 192 330 Z"
+                fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+          <path d="M 92 664 Q 250 684 408 664 L 408 680 Q 250 700 92 680 Z" fill="url(#pat_border)"/>
+        `;
+        // Short Flared Peplum Top
+        const peplumTop = `
+          M 182 140 L 318 140
+          C 322 182, 312 220, 298 248
+          C 325 278, 344 318, 352 355
+          Q 250 372, 148 355
+          C 156 318, 175 278, 202 248
+          C 188 220, 178 182, 182 140 Z
+        `;
+        gTop.innerHTML = `
+          <path d="${peplumTop}" fill="url(#pat_top)" stroke="#3E1F2B" stroke-width="1"/>
+          <path d="${peplumTop}" fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+        `;
+        gBorder.innerHTML = getNecklineAndBorderSVG(state.neckline, 355, 148, 352, true);
+        gDupatta.innerHTML = getDupattaSVG('side');
+
+      } else if (state.dress === 'kaftan') {
+        gSleeves.innerHTML = ''; // Kaftan has integrated batwing sleeves
+        const kaftanPath = `
+          M 180 140 L 320 140
+          C 375 160, 420 215, 430 310
+          C 405 340, 382 355, 368 420
+          L 382 668
+          Q 250 688, 118 668
+          L 132 420
+          C 118 355, 95 340, 70 310
+          C 80 215, 125 160, 180 140 Z
+        `;
+        gTop.innerHTML = `
+          <path d="${kaftanPath}" fill="url(#pat_top)" stroke="#3E1F2B" stroke-width="1"/>
+          <path d="${kaftanPath}" fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+        `;
+        gBorder.innerHTML = getNecklineAndBorderSVG(state.neckline, 668, 118, 382, true) + `
+          <line x1="250" y1="190" x2="250" y2="675" stroke="url(#pat_border)" stroke-width="10"/>
+        `;
+      }
+
+      highlightSelectedPartOnCanvas();
+    }
+
+    function getSleevesSVG(sleeveType) {
+      if (sleeveType === 'sleeveless') return '';
+      let leftD = '', rightD = '';
+      if (sleeveType === 'full') {
+        leftD  = 'M 184 140 C 156 185, 140 250, 126 332 L 146 338 C 160 265, 174 205, 192 168 Z';
+        rightD = 'M 316 140 C 344 185, 360 250, 374 332 L 354 338 C 340 265, 326 205, 308 168 Z';
+      } else if (sleeveType === 'three_quarter') {
+        leftD  = 'M 184 140 C 160 180, 146 230, 138 282 L 160 288 C 168 240, 178 198, 192 168 Z';
+        rightD = 'M 316 140 C 340 180, 354 230, 362 282 L 340 288 C 332 240, 322 198, 308 168 Z';
+      } else if (sleeveType === 'half') {
+        leftD  = 'M 184 140 C 166 168, 156 196, 152 222 L 176 228 C 180 205, 186 184, 192 168 Z';
+        rightD = 'M 316 140 C 334 168, 344 196, 348 222 L 324 228 C 320 205, 314 184, 308 168 Z';
+      } else if (sleeveType === 'bell') {
+        leftD  = 'M 184 140 C 162 182, 148 225, 114 300 Q 138 314 162 302 C 168 250, 178 202, 192 168 Z';
+        rightD = 'M 316 140 C 338 182, 352 225, 386 300 Q 362 314 338 302 C 332 250, 322 202, 308 168 Z';
+      } else if (sleeveType === 'puff') {
+        leftD  = 'M 184 140 C 142 155, 136 205, 154 232 L 176 236 C 182 210, 186 184, 192 168 Z';
+        rightD = 'M 316 140 C 358 155, 364 205, 346 232 L 324 236 C 318 210, 314 184, 308 168 Z';
+      }
+      return `
+        <path d="${leftD}" fill="url(#pat_sleeves)" stroke="#3E1F2B" stroke-width="0.9"/>
+        <path d="${rightD}" fill="url(#pat_sleeves)" stroke="#3E1F2B" stroke-width="0.9"/>
+        <path d="${leftD}" fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+        <path d="${rightD}" fill="url(#body3DShade)" style="mix-blend-mode:multiply;"/>
+      `;
+    }
+
+    function getNecklineAndBorderSVG(neckType, hemY, leftX, rightX, includeWaistBelt = false) {
+      let neckCut = '', neckTrim = '';
+      if (neckType === 'round') {
+        neckCut  = 'M 218 140 Q 250 188 282 140 Z';
+        neckTrim = 'M 214 140 Q 250 196 286 140';
+      } else if (neckType === 'vneck') {
+        neckCut  = 'M 218 140 L 250 196 L 282 140 Z';
+        neckTrim = 'M 214 140 L 250 204 L 286 140';
+      } else if (neckType === 'boat') {
+        neckCut  = 'M 204 140 Q 250 164 296 140 Z';
+        neckTrim = 'M 200 140 Q 250 172 300 140';
+      } else if (neckType === 'sweetheart') {
+        neckCut  = 'M 216 140 Q 232 168 250 192 Q 268 168 284 140 Z';
+        neckTrim = 'M 212 140 Q 230 174 250 200 Q 270 174 288 140';
+      } else if (neckType === 'collar') {
+        neckCut  = 'M 224 140 L 250 172 L 276 140 Z';
+        neckTrim = 'M 220 136 L 250 178 L 280 136 M 250 178 L 250 232';
+      } else if (neckType === 'square') {
+        neckCut  = 'M 220 140 L 220 184 L 280 184 L 280 140 Z';
+        neckTrim = 'M 216 140 L 216 188 L 284 188 L 284 140';
+      }
+
+      const beltSVG = includeWaistBelt
+        ? `<rect x="198" y="244" width="104" height="12" rx="4" fill="url(#pat_border)" stroke="#D4AF37" stroke-width="1.2"/>`
+        : '';
+
+      return `
+        <!-- Skin showing inside neckline opening -->
+        <path d="${neckCut}" fill="url(#skinGrad)"/>
+        <!-- Embroidery Neckline Border -->
+        <path d="${neckTrim}" fill="none" stroke="url(#pat_border)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="${neckTrim}" fill="none" stroke="#D4AF37" stroke-width="1.4" stroke-dasharray="3,2"/>
+        ${beltSVG}
+        <!-- Bottom Daman Border -->
+        <path d="M ${leftX + 2} ${hemY - 12} Q 250 ${hemY + 2} ${rightX - 2} ${hemY - 12} L ${rightX} ${hemY} Q 250 ${hemY + 14} ${leftX} ${hemY} Z"
+              fill="url(#pat_border)" stroke="#D4AF37" stroke-width="1"/>
+      `;
+    }
+
+    function getDupattaSVG(style) {
+      if (style === 'side') {
+        return `
+          <path d="M 288 140 L 320 140 C 345 270, 365 420, 378 585 L 330 595 C 318 430, 300 280, 288 140 Z"
+                fill="url(#pat_dupatta)" fill-opacity="0.88" stroke="#D4AF37" stroke-width="1.5"/>
+        `;
+      }
+      return `
+        <path d="M 182 140 L 214 140 Q 255 235 316 142 L 328 168 Q 255 275 188 195 L 178 490 L 142 480 Z"
+              fill="url(#pat_dupatta)" fill-opacity="0.88" stroke="#D4AF37" stroke-width="1.5"/>
+      `;
+    }
+
+    /**************************************************************
+     * 5. DIRECT ON-CANVAS TAP-AND-CHANGE POPOVER UX
+     **************************************************************/
+    function onCanvasPartTap(partKey, evt) {
+      evt.stopPropagation();
+      selectPart(partKey);
+      openFloatingPopover(partKey, evt);
+    }
+
+    function selectPart(partKey) {
+      state.activePart = partKey;
+      document.getElementById('lblActivePart').textContent = PART_LABELS[partKey] || partKey;
+
+      document.querySelectorAll('.part-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.part === partKey);
+      });
+
+      const cfg = state.parts[partKey];
+      if (cfg) {
+        document.getElementById('sideScaleSlider').value = cfg.scale;
+        document.getElementById('lblSideScale').textContent = cfg.scale + 'x';
+        document.getElementById('sideRotateSlider').value = cfg.rotate;
+        document.getElementById('lblSideRotate').textContent = cfg.rotate + '°';
+      }
+
+      highlightSelectedPartOnCanvas();
+      renderSwatches();
+    }
+
+    function highlightSelectedPartOnCanvas() {
+      const map = {
+        top: 'layerTop',
+        bottom: 'layerBottom',
+        sleeves: 'layerSleeves',
+        dupatta: 'layerDupatta',
+        border: 'layerBorder'
+      };
+      Object.keys(map).forEach(k => {
+        const el = document.getElementById(map[k]);
+        if (el) el.classList.toggle('selected-part', k === state.activePart);
+      });
+    }
+
+    function openFloatingPopover(partKey, evt) {
+      const pop = document.getElementById('floatingPopover');
+      const wrap = document.getElementById('svgWrapper');
+      const rect = wrap.getBoundingClientRect();
+
+      document.getElementById('popoverTitle').textContent = `✨ ${PART_LABELS[partKey]}`;
+
+      // Build Context-Aware Controls inside Popover
+      const container = document.getElementById('popoverDynamicContent');
+      const allFabrics = getAllFabrics();
+      const currentFab = state.parts[partKey].fabric;
+
+      let extraControlsHTML = '';
+      if (partKey === 'border') {
+        extraControlsHTML = `
+          <div style="margin-bottom:8px;">
+            <div style="font-size:11.5px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">গলার ডিজাইন (১-ট্যাপ পরিবর্তন):</div>
+            <div class="option-grid" style="margin-bottom:6px;">
+              ${NECKLINES.map(n => `
+                <button class="opt-btn ${state.neckline === n.id ? 'active' : ''}" style="padding:5px; font-size:11px;"
+                        onclick="setNeckline('${n.id}')">${n.name}</button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else if (partKey === 'sleeves') {
+        extraControlsHTML = `
+          <div style="margin-bottom:8px;">
+            <div style="font-size:11.5px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">হাতার কাটিং (১-ট্যাপ পরিবর্তন):</div>
+            <div class="option-grid" style="margin-bottom:6px;">
+              ${SLEEVES.map(s => `
+                <button class="opt-btn ${state.sleeve === s.id ? 'active' : ''}" style="padding:5px; font-size:11px;"
+                        onclick="setSleeve('${s.id}')">${s.name}</button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        ${extraControlsHTML}
+        <button class="quick-cycle-btn" onclick="cycleNextFabric('${partKey}')">
+          🎲 পরের কাপড় ট্রাই করুন (১-ট্যাপ)
+        </button>
+        <div style="font-size:11.5px; font-weight:700; color:var(--text-muted);">সরাসরি কাপড় বেছে নিন:</div>
+        <div class="mini-swatch-row">
+          ${allFabrics.map(f => `
+            <div class="mini-swatch ${f.id === currentFab ? 'active' : ''}"
+                 title="${f.name}"
+                 style="background:${f.isCustom ? `url(${f.dataUrl}) center/cover` : f.bg};"
+                 onclick="applyFabricToPart('${partKey}', '${f.id}')"></div>
+          `).join('')}
+        </div>
+        <div class="slider-group">
+          <label><span>প্রিন্ট সাইজ</span><span id="popScaleVal">${state.parts[partKey].scale}x</span></label>
+          <input type="range" min="0.4" max="2.5" step="0.1" value="${state.parts[partKey].scale}"
+                 oninput="updateActivePartTransform('scale', this.value)">
+        </div>
+      `;
+
+      pop.style.display = 'block';
+
+      // Position near tap coordinate while staying inside wrapper bounds
+      let left = 20, top = 80;
+      if (evt && evt.clientX) {
+        const clickX = evt.clientX - rect.left;
+        const clickY = evt.clientY - rect.top;
+        left = clickX > rect.width / 2 ? Math.max(10, clickX - 290) : Math.min(rect.width - 285, clickX + 18);
+        top = Math.max(10, Math.min(rect.height - 260, clickY - 40));
+      }
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function closePopover() {
+      document.getElementById('floatingPopover').style.display = 'none';
+    }
+
+    // Close popover if clicking outside
+    document.addEventListener('click', (e) => {
+      const pop = document.getElementById('floatingPopover');
+      if (pop.style.display === 'block' && !pop.contains(e.target) && !e.target.closest('.clickable-part') && !e.target.closest('#headZoneGroup')) {
+        closePopover();
+      }
+    });
+
+    function cycleNextFabric(partKey) {
+      const all = getAllFabrics();
+      const currId = state.parts[partKey].fabric;
+      const idx = all.findIndex(f => f.id === currId);
+      const nextFab = all[(idx + 1) % all.length];
+      applyFabricToPart(partKey, nextFab.id);
+    }
+
+    function applyFabricToPart(partKey, fabricId) {
+      state.parts[partKey].fabric = fabricId;
+      renderDressOnCanvas();
+      renderSwatches();
+      // Update mini-swatch highlight if popover is open
+      const pop = document.getElementById('floatingPopover');
+      if (pop.style.display === 'block') {
+        openFloatingPopover(partKey, null);
+      }
+    }
+
+    function updateActivePartTransform(type, val) {
+      const p = state.activePart;
+      if (type === 'scale') {
+        state.parts[p].scale = parseFloat(val);
+        document.getElementById('lblSideScale').textContent = val + 'x';
+        const popScale = document.getElementById('popScaleVal');
+        if (popScale) popScale.textContent = val + 'x';
+      } else {
+        state.parts[p].rotate = parseInt(val, 10);
+        document.getElementById('lblSideRotate').textContent = val + '°';
+      }
+      rebuildSVGPatterns();
+    }
+
+    /**************************************************************
+     * 6. NECK-UP FACE UPLOAD & CALIBRATION (HEADLESS BY DEFAULT)
+     **************************************************************/
+    function openFacePopoverFromBtn() {
+      scrollToStudio();
+      openFacePopover(null);
+    }
+
+    function openFacePopover(evt) {
+      if (evt) evt.stopPropagation();
+      const pop = document.getElementById('floatingPopover');
+      document.getElementById('popoverTitle').textContent = '👤 গলার উপরে মুখ (Neck-Up Head)';
+      const container = document.getElementById('popoverDynamicContent');
+
+      container.innerHTML = `
+        <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:8px;">
+          আপনার ছবি আপলোড করলে তা শুধুমাত্র গলার উপরের অংশে বসবে:
+        </p>
+        <button class="btn-primary" style="width:100%; justify-content:center; margin-bottom:8px;" onclick="triggerFaceUpload()">
+          📸 ছবি সিলেক্ট করুন
+        </button>
+        ${state.face.enabled ? `
+          <div class="slider-group">
+            <label><span>জুম (Zoom)</span><span>${state.face.scale}x</span></label>
+            <input type="range" min="0.5" max="2.8" step="0.05" value="${state.face.scale}" oninput="updateFaceTransform('scale', this.value)">
+          </div>
+          <div class="slider-group">
+            <label><span>ডানে/বামে (X)</span><span>${state.face.x}px</span></label>
+            <input type="range" min="-80" max="80" step="1" value="${state.face.x}" oninput="updateFaceTransform('x', this.value)">
+          </div>
+          <div class="slider-group">
+            <label><span>উপরে/নিচে (Y)</span><span>${state.face.y}px</span></label>
+            <input type="range" min="-80" max="80" step="1" value="${state.face.y}" oninput="updateFaceTransform('y', this.value)">
+          </div>
+          <button class="btn-outline" style="width:100%; margin-top:8px;" onclick="removeFacePhoto()">🚫 মুখ লুকান (Headless)</button>
+        ` : ''}
+      `;
+
+      pop.style.display = 'block';
+      pop.style.left = '16px';
+      pop.style.top = '16px';
+    }
+
+    function triggerFaceUpload() {
+      document.getElementById('faceFileInput').click();
+    }
+
+    function handleFaceFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        state.face.enabled = true;
+        state.face.dataUrl = ev.target.result;
+        state.face.scale = 1.0;
+        state.face.x = 0;
+        state.face.y = 0;
+        saveFaceState();
+        applyFaceState();
+        openFacePopover(null);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateFaceTransform(prop, val) {
+      state.face[prop] = parseFloat(val);
+      document.getElementById('lblFaceZoom').textContent = state.face.scale + 'x';
+      document.getElementById('lblFaceX').textContent = state.face.x + 'px';
+      document.getElementById('lblFaceY').textContent = state.face.y + 'px';
+      saveFaceState();
+      applyFaceState();
+    }
+
+    function removeFacePhoto() {
+      state.face.enabled = false;
+      saveFaceState();
+      applyFaceState();
+      closePopover();
+    }
+
+    function saveFaceState() {
+      try {
+        localStorage.setItem('LS_SAVED_FACE_V2', JSON.stringify(state.face));
+      } catch (e) {}
+    }
+
+    function applyFaceState() {
+      const faceContainer = document.getElementById('uploadedFaceContainer');
+      const promptUI      = document.getElementById('addFacePromptUI');
+      const neckCap       = document.getElementById('neckCutoffCap');
+      const imgEl         = document.getElementById('userFaceImage');
+      const hideBtn       = document.getElementById('hideFaceBtn');
+      const slidersBox    = document.getElementById('sidebarFaceSliders');
+
+      if (state.face.enabled && state.face.dataUrl) {
+        faceContainer.style.display = 'block';
+        promptUI.style.display = 'none';
+        neckCap.style.display = 'none';
+        hideBtn.style.display = 'inline-block';
+        slidersBox.style.display = 'block';
+
+        imgEl.setAttribute('href', state.face.dataUrl);
+        imgEl.setAttribute('transform', `translate(${250 + state.face.x} ${64 + state.face.y}) scale(${state.face.scale}) translate(-250 -64)`);
+      } else {
+        faceContainer.style.display = 'none';
+        promptUI.style.display = 'block';
+        neckCap.style.display = 'block';
+        hideBtn.style.display = 'none';
+        slidersBox.style.display = 'none';
+      }
+    }
+
+    /**************************************************************
+     * 7. SIDEBAR CONTROLS, CUSTOM FABRIC UPLOAD & PNG EXPORT
+     **************************************************************/
+    function selectDress(dressId) {
+      state.dress = dressId;
+      document.querySelectorAll('.dress-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.dress === dressId);
+      });
+      closePopover();
+      renderDressOnCanvas();
+    }
+
+    function setNeckline(id) {
+      state.neckline = id;
+      renderOptionButtons();
+      renderDressOnCanvas();
+    }
+
+    function setSleeve(id) {
+      state.sleeve = id;
+      renderOptionButtons();
+      renderDressOnCanvas();
+    }
+
+    function renderOptionButtons() {
+      document.getElementById('necklineGrid').innerHTML = NECKLINES.map(n => `
+        <button class="opt-btn ${state.neckline === n.id ? 'active' : ''}" onclick="setNeckline('${n.id}')">${n.name}</button>
+      `).join('');
+
+      document.getElementById('sleeveGrid').innerHTML = SLEEVES.map(s => `
+        <button class="opt-btn ${state.sleeve === s.id ? 'active' : ''}" onclick="setSleeve('${s.id}')">${s.name}</button>
+      `).join('');
+    }
+
+    function filterFabrics(cat, btnEl) {
+      state.activeCat = cat;
+      document.querySelectorAll('#fabricCatTabs .cat-tab').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      renderSwatches();
+    }
+
+    function renderSwatches() {
+      const grid = document.getElementById('fabricSwatchGrid');
+      const all = getAllFabrics().filter(f => state.activeCat === 'all' || f.cat === state.activeCat);
+      const currentFab = state.parts[state.activePart].fabric;
+
+      grid.innerHTML = all.map(f => `
+        <div class="swatch-card ${f.id === currentFab ? 'active' : ''}" onclick="applyFabricToPart('${state.activePart}', '${f.id}')">
+          ${f.isCustom ? `<button class="del-swatch" onclick="deleteCustomFabric('${f.id}', event)">×</button>` : ''}
+          <div class="swatch-preview" style="background:${f.isCustom ? `url(${f.dataUrl}) center/cover` : f.bg};"></div>
+          <div class="swatch-name">${f.name}</div>
+        </div>
+      `).join('');
+    }
+
+    function triggerFabricUpload() {
+      document.getElementById('fabricFileInput').click();
+    }
+
+    function handleFabricFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const customName = prompt('আপনার নতুন কাপড়ের একটি নাম দিন:', file.name.replace(/\.[^/.]+$/, "")) || 'আমার কাপড়';
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const newFab = {
+          id: 'custom_' + Date.now(),
+          name: customName,
+          cat: 'custom',
+          isCustom: true,
+          dataUrl: ev.target.result,
+          bg: '#FCE4EC'
+        };
+        customFabrics.unshift(newFab);
+        try {
+          localStorage.setItem('LS_CUSTOM_FABRICS_V2', JSON.stringify(customFabrics));
+        } catch (err) {
+          alert('ব্রাউজার মেমোরি পূর্ণ হয়ে গেছে! পুরনো কিছু ছবি ডিলিট করুন।');
+        }
+        applyFabricToPart(state.activePart, newFab.id);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function deleteCustomFabric(id, e) {
+      e.stopPropagation();
+      customFabrics = customFabrics.filter(f => f.id !== id);
+      localStorage.setItem('LS_CUSTOM_FABRICS_V2', JSON.stringify(customFabrics));
+      renderSwatches();
+    }
+
+    function randomizeOutfit() {
+      const all = getAllFabrics();
+      const pick = () => all[Math.floor(Math.random() * all.length)].id;
+      state.parts.top.fabric = pick();
+      state.parts.bottom.fabric = pick();
+      state.parts.sleeves.fabric = state.parts.top.fabric;
+      state.parts.dupatta.fabric = pick();
+      state.parts.border.fabric = pick();
+      renderDressOnCanvas();
+      renderSwatches();
+    }
+
+    // Save & Reload Closet
+    function saveCurrentDesignToCloset() {
+      const title = prompt('এই ডিজাইনটির একটি নাম দিন:', 'আমার কাস্টম ড্রেস #' + (savedCloset.length + 1));
+      if (!title) return;
+      const item = {
+        id: Date.now(),
+        title,
+        date: new Date().toLocaleDateString('bn-BD'),
+        snapshot: JSON.parse(JSON.stringify(state))
+      };
+      savedCloset.unshift(item);
+      localStorage.setItem('LS_SAVED_CLOSET_V2', JSON.stringify(savedCloset));
+      document.getElementById('savedCount').textContent = savedCloset.length;
+      alert('ডিজাইনটি "আমার ক্লোজেট"-এ সেভ হয়েছে!');
+    }
+
+    function toggleClosetModal(show) {
+      const modal = document.getElementById('closetModal');
+      modal.style.display = show ? 'flex' : 'none';
+      if (show) {
+        const grid = document.getElementById('savedDesignsGrid');
+        if (savedCloset.length === 0) {
+          grid.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:24px;">এখনো কোনো ডিজাইন সেভ করা হয়নি।</p>`;
+          return;
+        }
+        grid.innerHTML = savedCloset.map(item => `
+          <div class="saved-card">
+            <h4 style="color:var(--primary-dark); margin-bottom:4px;">${item.title}</h4>
+            <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">তারিখ: ${item.date}</p>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-primary" style="font-size:12px; padding:5px 10px;" onclick="loadDesignFromCloset(${item.id})">লোড করুন</button>
+              <button class="btn-outline" style="font-size:12px; padding:5px 10px;" onclick="deleteSavedDesign(${item.id})">মুছুন</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function loadDesignFromCloset(id) {
+      const found = savedCloset.find(x => x.id === id);
+      if (!found) return;
+      state = JSON.parse(JSON.stringify(found.snapshot));
+      selectDress(state.dress);
+      renderOptionButtons();
+      renderDressOnCanvas();
+      applyFaceState();
+      toggleClosetModal(false);
+    }
+
+    function deleteSavedDesign(id) {
+      savedCloset = savedCloset.filter(x => x.id !== id);
+      localStorage.setItem('LS_SAVED_CLOSET_V2', JSON.stringify(savedCloset));
+      document.getElementById('savedCount').textContent = savedCloset.length;
+      toggleClosetModal(true);
+    }
+
+    function scrollToStudio() {
+      document.getElementById('studioMain').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Export High-Resolution PNG
+    function downloadDesignPNG() {
+      closePopover();
+      const svgEl = document.getElementById('dressCanvas');
+      const promptUI = document.getElementById('addFacePromptUI');
+      const prevPromptDisplay = promptUI.style.display;
+      // Hide "+ মুখ যুক্ত করুন" dashed badge during PNG export
+      promptUI.style.display = 'none';
+
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svgEl);
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1000;
+        canvas.height = 1480;
+        const ctx = canvas.getContext('2d');
+
+        // Soft Blush Pink Studio Backdrop
+        const grad = ctx.createLinearGradient(0, 0, 1000, 1480);
+        grad.addColorStop(0, '#FFF5F7');
+        grad.addColorStop(1, '#FCE4EC');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.drawImage(img, 0, 0, 1000, 1480);
+
+        // Brand Watermark
+        ctx.fillStyle = '#C2185B';
+        ctx.font = 'bold 24px sans-serif';
+        ctx.fillText('লাক্সারি স্টুডিও (Luxury Studio)', 40, 1435);
+
+        URL.revokeObjectURL(url);
+        promptUI.style.display = prevPromptDisplay;
+
+        const a = document.createElement('a');
+        a.download = `luxury-studio-${state.dress}-${Date.now()}.png`;
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+      };
+      img.src = url;
+    }
+  </script>
+</body>
+</html>
